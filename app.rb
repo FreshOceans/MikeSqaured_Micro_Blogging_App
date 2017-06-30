@@ -72,7 +72,8 @@ end
 # ===== Blog ======
 get '/blog' do
 	puts "\n******* blog *******"
-	@posts = Post.all.order("created_at").desc
+	# @posts = Post.all.order(created_at: :desc)
+	@posts = Post.all
 	puts "@posts.inspect: #{@posts.inspect}"
 	erb :blog
 end
@@ -108,12 +109,12 @@ post '/user' do
 	puts "@user:, #{@user}"
 	redirect '/profile'
 end
-# == Read User Info
-get '/all_users' do
-	puts "\n******* all_users *******"
+# == Read All Users Info
+get '/directory' do
+	puts "\n******* directory *******"
 	@users = User.all
 	puts "@users.inspect: #{@users.inspect}"
-	erb :all_users
+	erb :directory
 end
 # # == Update User Info
 get '/update_user_form' do
@@ -161,32 +162,25 @@ end
 post '/publish_post' do
 	puts "\n*****  publish_post *****"
 	puts "params: #{params.inspect}"
+	puts "session[:user_id], #{session[:user_id]}"
 		Post.create(
+			user_id: session[:user_id],
 			title: params[:title],
-			content: params[:content],
-			user_id: session[:user_id]
+			content: params[:content]
 			)
-		@post = Post.order("created_at").last
 		puts "@post: #{@post.inspect}"
 	redirect '/blog'
 end
 
 # ===== Comment =====
-get '/comment' do
-	puts "\n******* comment *******"
-	erb :comment_form
-end
-# == Create Comment
-get '/comment_form' do
-	puts "\n******* comment_form *******"
-	erb :comment_form
-end
+# == Publish Comment
 post'/publish_comment' do
 	puts "\n*****  publish_comment *****"
 	puts "params: #{params.inspect}"
 		Comment.create(
-			content: params[:content],
-			user_id: session[:user_id]
+			comment: params[:comment],
+			user_id: session[:user_id],
+			post_id: params[:post_id]
 			)
 		@comment = Comment.order("created_at").last
 		puts "@comment: #{@post.inspect}"

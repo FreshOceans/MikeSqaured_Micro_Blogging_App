@@ -4,7 +4,6 @@ var blog = {
     initialize: function() {
         console.log("== initialize ==");
         blog.activateUserInterface();
-        blog.deleteProfile();
     },
     activateUserInterface: function() {
         console.log("== activateUserInterface ==");

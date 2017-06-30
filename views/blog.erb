@@ -1,10 +1,27 @@
 <!-- ======= views/blog.erb ======= -->
 
 <div id="blog_posts">
-    <% puts "\n******* do loop (each_with_index) *******" %>
-    <% @posts.each_with_index do |post, index| %>
-        <% puts "** post/index: #{post}: #{index}" %>
-        <p> <%= post[:title] %> </p>
-        <p> <%= post[:content] %> </p>
+    <% puts "\n******* do loop *******" %>
+    <%# @posts.each do |post| %>
+    <% @posts.reverse[0..9].each do |post| %>
+        <% puts "** post: #{post}" %>
+        <p> <%= post.title %> </p>
+        <p> <%= post.content %> </p>
+
+        <!-- Comment Form  -->
+        <form  id="publish_comment" method="POST" action="/publish_comment">
+            <div><label for="comment"><p id="comment_label"><b>Comment</b></p></label><input type="comment" name="comment" id="comment" value=""></div>
+            <input type="hidden" value="<%= post.id %>" name="post_id">
+            <input type="submit" id="publish_comment" value="comment">
+        </form>
+
+        <!-- Display Comments -->
+        <% @comments = Comment.where(post_id: post.id) %>
+        <% @comments.each do |comment| %>
+            <div class="post_comment"><p><%= comment.comment %></p></div>
+            <div class="post_time"><p><%= comment.created_at.strftime('%m/%e %l:%M %p') %></p></div>
+        <% end %>
+
     <%end%>
+
 </div>
