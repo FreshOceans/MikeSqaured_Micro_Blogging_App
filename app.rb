@@ -14,7 +14,6 @@ set :database, "sqlite3:microblog2.db"
 # =======  sessions =======
 enable :sessions
 
-
 # ======= Home =======
 get '/' do
 	puts "\n******* home *******"
@@ -31,6 +30,38 @@ get '/profile' do
 	@user = User.find(session[:user_id])
 	erb :profile
 end
+# ===== Sign In =====
+get '/user_sign_in' do
+	puts "\n******* user_sign_in *******"
+	erb :user_sign_in
+end
+post '/user_sign_in' do
+	puts "\n******* user_sign_in *******"
+    @user = User.where(username: params[:username]).first
+	if @user
+		if @user.password == params[:password]
+			session[:user_id] = @user.id
+            @current_user = get_current_user
+			flash[:notice] = "You've been signed in successfully."
+			redirect '/welcome_page'
+		else
+			flash[:notice] = "Please check your username and password and try again."
+			redirect "/user_sign_in"
+		end
+	else
+		flash[:notice] = "Please check your username and password and try again."
+		redirect "/user_sign_in"
+	end
+end
+# ======= get_current_user =======
+def get_current_user
+    puts "\n******* get_current_user *******"
+    if session[:user_id]
+        return User.find(session[:user_id])
+    else
+        puts "** NO CURRENT USER **"
+    end
+end
 # ==== Log Out =====
 get "/logout" do
 	puts "\n******* logout *******"
@@ -38,34 +69,12 @@ get "/logout" do
 	flash[:notice] = "You've been logged out successfully."
 	redirect '/'
 end
-
-# ===== write ======
-get '/write' do
-	puts "\n******* write *******"
-	erb :write
-end
-
-post '/blog' do
-	puts "\n***** blog *****"
-	puts "params: #{params.inspect}"
-		Post.create(
-			title: params[:title],
-			content: params[:content]
-			)
-		@post = Post.order("created_at").last
-		puts "@post: #{@post.inspect}"
-	erb :blog
-end
-
+# ===== Blog ======
 get '/blog' do
-	puts "\n******* write *******"
+	puts "\n******* blog *******"
+	@posts = Post.all.order("created_at").desc
+	puts "@posts.inspect: #{@posts.inspect}"
 	erb :blog
-end
-
-# ==== Display Personal Info - styled ====
-get '/personalinfo' do
-	puts "\n******* personalinfo *******"
-	erb :personalinfo
 end
 
 # ===== User =====
@@ -132,35 +141,26 @@ get '/delete_user/:id' do
 	flash[:notice] = "You have successfully been removed from the blog."
 	redirect '/'
 end
-# ===== Sign In =====
-get '/user_sign_in' do
-	puts "\n******* user_sign_in *******"
-	erb :user_sign_in
+
+# ===== Post ======
+get '/post' do
+	puts "\n******* post *******"
+	erb :post_form
 end
-post '/user_sign_in' do
-	puts "\n******* user_sign_in *******"
-    @user = User.where(username: params[:username]).first
-	if @user
-		if @user.password == params[:password]
-			session[:user_id] = @user.id
-            @current_user = get_current_user
-			flash[:notice] = "You've been signed in successfully."
-			redirect '/welcome_page'
-		else
-			flash[:notice] = "Please check your username and password and try again."
-			redirect "/user_sign_in"
-		end
-	else
-		flash[:notice] = "Please check your username and password and try again."
-		redirect "/user_sign_in"
-	end
+# == Create Post
+get '/post_form' do
+	puts "\n******* post_form *******"
+	erb :post_form
 end
-# ======= get_current_user =======
-def get_current_user
-    puts "\n******* get_current_user *******"
-    if session[:user_id]
-        return User.find(session[:user_id])
-    else
-        puts "** NO CURRENT USER **"
-    end
+post '/publish_post' do
+	puts "\n*****  publish_post *****"
+	puts "params: #{params.inspect}"
+		Post.create(
+			title: params[:title],
+			content: params[:content],
+			user_id: session[:user_id]
+			)
+		@post = Post.order("created_at").last
+		puts "@post: #{@post.inspect}"
+	redirect '/blog'
 end

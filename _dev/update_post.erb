@@ -1,0 +1,32 @@
+# # == Update Post Info
+get '/update_post_form' do
+	puts "\n******* update_post_form *******"
+	erb :update_post_form
+end
+get '/update_post_form/:id' do
+	puts "\n******* update_post_form *******"
+	puts "params.inspect: #{params.inspect}"
+	@post = Post.find(params[:id])
+	erb :update_post_form
+end
+post '/update' do
+	puts "\n******* update *******"
+	puts "params.inspect: #{params.inspect}"
+	params.delete("captures")
+	Post.find(params[:id]).update_attributes(params)
+	@post =  Post.order("created_at").last
+	erb :welcome_page
+end
+# == Delete Post
+get '/delete_post' do
+	puts "\n******* delete_post *******"
+	erb :delete_post
+end
+get '/delete_post/:id' do
+	puts "\n******* delete_post *******"
+	puts "params.inspect: #{params.inspect}"
+	@post = Post.find(params[:id]).destroy
+	puts "@post, #{@post}"
+	flash[:notice] = "You have successfully been removed from the blog."
+	redirect '/welcome_page'
+end
