@@ -3,12 +3,12 @@
 <!-- == dynamically create menu items == -->
 
 <div id="menu">
-    <% menu_items_array = [ "home", "post", "blog", "feed" ] %>
+    <% menu_items_array = [ "home", "profile", "post", "blog", "feed" ] %>
     <div id="menu_items">
       <% for z in menu_items_array %>
       <% h = z %>
-        <% if z == "Home" %>
-            <% h = "Home" %>
+        <% if z == "home" %>
+            <% h = "home" %>
             <% z = "/" %>
         <% end %>
         <a href = <%= z %>>

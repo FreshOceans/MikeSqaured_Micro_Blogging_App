@@ -9,7 +9,7 @@ require "sinatra/flash"
 require './models'
 
 # ======= database =======
-set :database, "sqlite3:microblog2.db"
+set :database, "sqlite3:micro_blog_alpha.db"
 
 # =======  sessions =======
 enable :sessions
@@ -81,6 +81,12 @@ end
 get '/user' do
 	puts "\n******* user *******"
 	erb :user
+end
+# ===== Feed =====
+get '/feed' do
+	puts "\n******* feed *******"
+	# @user = User.find(session[:user_id])
+	erb :feed
 end
 # == Create User
 get '/user_registration_form' do
@@ -162,5 +168,27 @@ post '/publish_post' do
 			)
 		@post = Post.order("created_at").last
 		puts "@post: #{@post.inspect}"
+	redirect '/blog'
+end
+
+# ===== Comment =====
+get '/comment' do
+	puts "\n******* comment *******"
+	erb :comment_form
+end
+# == Create Comment
+get '/comment_form' do
+	puts "\n******* comment_form *******"
+	erb :comment_form
+end
+post'/publish_comment' do
+	puts "\n*****  publish_comment *****"
+	puts "params: #{params.inspect}"
+		Comment.create(
+			content: params[:content],
+			user_id: session[:user_id]
+			)
+		@comment = Comment.order("created_at").last
+		puts "@comment: #{@post.inspect}"
 	redirect '/blog'
 end
