@@ -6,6 +6,6 @@
     <% @users.each_with_index do |user, index| %>
         <% puts "** user/index: #{user}: #{index}" %>
         <!-- <p> <%= user[:username] %> </p> -->
-        <p> <a href="/profile"> <%= user[:username] %> </a></p>
+        <p> <a href="/profile/<%= user[:id] %>"> <%= user[:username] %> </a></p>
     <%end%>
 </div>

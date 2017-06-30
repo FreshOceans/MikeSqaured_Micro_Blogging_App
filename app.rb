@@ -25,11 +25,12 @@ get '/welcome_page' do
 	erb :welcome_page
 end
 # ===== Profile =====
-get '/profile' do
+get '/profile/:id' do
 	puts "\n******* profile *******"
-	@user = User.find(session[:user_id])
+	@user = User.find(params[:id])
 	erb :profile
 end
+
 # ===== Sign In =====
 get '/user_sign_in' do
 	puts "\n******* user_sign_in *******"

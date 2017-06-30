@@ -6,14 +6,16 @@
     <p> First Name: <%= @user[:firstname] %> </p>
     <p> Last Name: <%= @user[:lastname] %> </p>
     <p> Userame: <%= @user[:username] %> </p>
-    <p> Password: <%= @user[:password] %> </p>
     <p> Email: <%= @user[:email] %> </p>
 </div>
 
-<div id="edit_account">
-    <p>Change Profile Settings</p>
-    <a href="/update_user_form/<%= session[:user_id]%>">Update your Profile</a><br>
-    <a href="/delete_user/<%= session[:user_id]%>">Delete your Profile</a><br>
-</div>
+<% if session[:user_id] == @user.id %>
+    <div id="edit_account">
+        <p>Change Profile Settings</p>
+        <p> Password: <%= @user[:password] %> </p>
+        <a href="/update_user_form/<%= session[:user_id]%>">Update your Profile</a><br>
+        <a href="/delete_user/<%= session[:user_id]%>">Delete your Profile</a><br>
+    </div>
+<% end %>
 
 <a href="/logout">Logout</a>
