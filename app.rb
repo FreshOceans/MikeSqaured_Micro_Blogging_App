@@ -25,9 +25,16 @@ get '/welcome_page' do
 	erb :welcome_page
 end
 # ===== Profile =====
+get '/profile' do
+	puts "\n******* profile *******"
+	@user = User.find(session[:user_id])
+	erb :profile
+end
+
 get '/profile/:id' do
 	puts "\n******* profile *******"
 	@user = User.find(params[:id])
+	@posts = Post.where(user_id: params[:id])
 	erb :profile
 end
 
@@ -73,8 +80,8 @@ end
 # ===== Blog ======
 get '/blog' do
 	puts "\n******* blog *******"
-	# @posts = Post.all.order(created_at: :desc)
-	@posts = Post.all
+	@posts = Post.all.order(created_at: :desc)
+	# @posts = Post.all
 	puts "@posts.inspect: #{@posts.inspect}"
 	erb :blog
 end

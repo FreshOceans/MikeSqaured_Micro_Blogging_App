@@ -2,8 +2,8 @@
 
 <div id="blog_posts">
     <% puts "\n******* do loop *******" %>
-    <%# @posts.each do |post| %>
-    <% @posts.reverse[0..9].each do |post| %>
+    <% @posts.each do |post| %>
+    <%# @posts.reverse[0..9].each do |post| %>
         <% puts "** post: #{post}" %>
         <p> <%= post.title %> </p>
         <p> <%= post.content %> </p>
